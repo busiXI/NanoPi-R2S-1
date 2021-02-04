@@ -9,7 +9,7 @@ jobs:
 
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
 
@@ -71,19 +71,19 @@ jobs:
 
           svn co https://github.com/vernesong/OpenClash/trunk/luci-app-openclash
           
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/luci-app-passwall
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/tcping
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/ssocks
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/trojan-plus
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/trojan-go
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/naiveproxy
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/brook
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/chinadns-ng
-          svn co https://github.com/xiaorouji/openwrt-passwall/tree/main/xray-core
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/luci-app-passwall
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/tcping
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/ssocks
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/trojan-plus
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/trojan-go
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/naiveproxy
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/brook
+          svn co https://github.com/xiaorouji/openwrt-passwall/trunk/chinadns-ng
+          svn co https://github.com/xiaorouji/openwrt-x/trunk/xray
           
-          svn co https://github.com/songchenwen/nanopi-r2s/tree/master/luci-app-r2sflasher
+          svn co https://github.com/songchenwen/nanopi-r2s/trunk/luci-app-r2sflasher
           
-          svn co https://github.com/pymumu/smartdns/tree/master/package/openwrt smartdns
+          svn co https://github.com/pymumu/smartdns/trunk/package/openwrt smartdns
           cp -r ../../../package/luci-app-smartdns .
           
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
@@ -117,16 +117,16 @@ jobs:
           cd code
 
           rm -rf friendlywrt/feeds/packages/libs/libcap
-          svn co https://github.com/openwrt/packages/tree/master/libs/libcap friendlywrt/feeds/packages/libs/libcap
+          svn co https://github.com/openwrt/packages/trunk/libs/libcap friendlywrt/feeds/packages/libs/libcap
           
           rm -rf friendlywrt/package/feeds/packages/netdata
-          svn co https://github.com/openwrt/packages/tree/master/admin/netdata friendlywrt/package/feeds/packages/netdata
+          svn co https://github.com/openwrt/packages/trunk/admin/netdata friendlywrt/package/feeds/packages/netdata
 
           rm -rf friendlywrt/feeds/packages/libs/libnatpmp
-          svn co https://github.com/coolsnowwolf/packages/tree/master/libs/libnatpmp friendlywrt/feeds/packages/libs/libnatpmp
+          svn co https://github.com/coolsnowwolf/packages/trunk/libs/libnatpmp friendlywrt/feeds/packages/libs/libnatpmp
           
           rm -rf friendlywrt/feeds/packages/lang/luasec
-          svn co https://github.com/coolsnowwolf/packages/tree/master/lang/luasec friendlywrt/feeds/packages/lang/luasec
+          svn co https://github.com/coolsnowwolf/packages/trunk/lang/luasec friendlywrt/feeds/packages/lang/luasec
 
           sed -i '/STAMP_BUILT/d' friendlywrt/feeds/packages/utils/runc/Makefile
           sed -i '/STAMP_BUILT/d' friendlywrt/feeds/packages/utils/containerd/Makefile
