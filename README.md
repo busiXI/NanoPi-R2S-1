@@ -27,6 +27,7 @@ Fork 到自己的账号下，将 `.github/workflows` 下 `.yml` 文件中的 `ru
 
 ## 注意
 产品发布初期，官方代码每天都在变，遇到无法编译时，请过来查看 `.yml` 与 `config` 最新异动。
+如果fork soffchen/NanoPi-R2S,要修改`.github/workflows`下`.yml` 文件中的 'svn co https://github.com/xiaorouji/openwrt-passwall/trunk/xray' 改为'svn co https://github.com/xiaorouji/openwrt-x/trunk/xray',否则会编译失效。
 
 ## 参考
 * [使用Github的Actions功能在线编译NanoPi-R1S固件（包含H5和H3）](https://totoro.site/index.php/archives/70/)
