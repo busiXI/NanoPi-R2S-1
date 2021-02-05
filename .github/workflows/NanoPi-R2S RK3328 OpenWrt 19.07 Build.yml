@@ -202,3 +202,9 @@ jobs:
         with:
           name: FriendlyWrt_NanoPi-R2S RK3328 v19.07
           path: ./artifact/
+          
+      - name: Deliver package
+        uses: actions/upload-artifact@master
+        with:
+          name: OpenWrt_package
+          path: ./artifact/package/
