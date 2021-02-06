@@ -165,13 +165,14 @@ jobs:
            
       - name: Install UPX
         run: |
-          ln -s /usr/bin/upx-ucl /code/friendlywrt/staging_dir/host/bin/upx
+          ln -s /usr/bin/upx-ucl code/friendlywrt/staging_dir/host/bin/upx
 
       - name: Build OpenWrt
         run: |
-          cd code
-          sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
-          ./build.sh nanopi_r2s.mk
+          cd code/friendlywrt
+          make j=1 V=s
+          #sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
+          #./build.sh nanopi_r2s.mk
 
       - name: Fix Rootfs Owner and Group
         run: |
