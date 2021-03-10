@@ -23,11 +23,11 @@ jobs:
           DEBIAN_FRONTEND: noninteractive
         run: |
           sudo apt-get update
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk
-          sudo docker image prune -a -f
-          sudo apt-get -y install upx-ucl unzip subversion
-          sudo apt-get -y purge dotnet* ghc* google* llvm* mysql* php* zulu* firefox hhvm
-          sudo apt-get -y autoremove --purge          
+          #sudo rm -rf /usr/share/dotnet /usr/local/lib/android/sdk
+          #sudo docker image prune -a -f
+          #sudo apt-get -y install upx-ucl unzip subversion
+          #sudo apt-get -y purge dotnet* ghc* google* llvm* mysql* php* zulu* firefox hhvm
+          #sudo apt-get -y autoremove --purge          
           wget -O - https://raw.githubusercontent.com/friendlyarm/build-env-on-ubuntu-bionic/master/install.sh | bash
       #- name: Setup Debug Session
       #  uses: P3TERX/debugger-action@master
@@ -38,14 +38,14 @@ jobs:
           sudo cp repo/repo /usr/bin/
       - name: Download Source
         run: |
-          rm -rf code
-          mkdir code
-          cd code
+          rm -rf frt
+          mkdir frt
+          cd frt
           repo init -u https://github.com/friendlyarm/friendlywrt_manifests -b master-v19.07.1 -m rk3328.xml --repo-url=https://github.com/friendlyarm/repo --no-clone-bundle
           repo sync -c --no-clone-bundle -j8
       - name: Merge LEDE
         run: |
-          cd code
+          cd frt
           git clone https://github.com/coolsnowwolf/lede
           cd friendlywrt
           cp -r ../lede/package/lean package/
@@ -55,7 +55,7 @@ jobs:
           echo 'src-git node https://github.com/nxhack/openwrt-node-packages.git' >> feeds.conf.default
       - name: Install Extra Packages
         run: |
-          cd code/friendlywrt/package
+          cd frt/friendlywrt/package
           git clone https://github.com/rufengsuixing/luci-app-adguardhome
           git clone https://github.com/jerrykuku/lua-maxminddb.git
           git clone https://github.com/jerrykuku/luci-app-vssr.git
@@ -83,29 +83,29 @@ jobs:
           git clone https://github.com/jerrykuku/luci-app-jd-dailybonus.git
           git clone https://github.com/NateLol/luci-app-oled
         
-      - name: Install Clash Binaries
-        run: |
-          cd code/friendlywrt/package/base-files/files
-          mkdir -p etc/openclash/core
-          # for updates, go to: https://github.com/Dreamacro/clash/releases
-          wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.3.5/clash-linux-armv8-v1.3.5.gz | gunzip -c > etc/openclash/core/clash
-          # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN-Premium
-          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-armv8-2021.01.01.g0ab75c5.gz | gunzip -c > etc/openclash/core/clash_tun
-          # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
-          wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-armv8.tar.gz | tar xOvz > etc/openclash/core/clash_game
-          chmod +x etc/openclash/core/clash*
+      #- name: Install Clash Binaries
+      #  run: |
+      #    cd frt/friendlywrt/package/base-files/files
+      #    mkdir -p etc/openclash/core
+      #    # for updates, go to: https://github.com/Dreamacro/clash/releases
+      #    wget -qO- https://github.com/Dreamacro/clash/releases/download/v1.3.5/clash-linux-armv8-v1.3.5.gz | gunzip -c > etc/openclash/core/clash
+      #    # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN-Premium
+      #    wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN-Premium/clash-linux-armv8-2021.01.01.g0ab75c5.gz | gunzip -c > etc/openclash/core/clash_tun
+      #    # for updates, go to: https://github.com/vernesong/OpenClash/releases/tag/TUN
+      #    wget -qO- https://github.com/vernesong/OpenClash/releases/download/TUN/clash-linux-armv8.tar.gz | tar xOvz > etc/openclash/core/clash_game
+      #    chmod +x etc/openclash/core/clash*
       - name: Update Target.mk
         run: |
-          cd code/friendlywrt/include
+          cd frt/friendlywrt/include
           sed -i 's/dnsmasq /dnsmasq-full default-settings luci /' target.mk
       - name: Update Feeds		
         run: |		
-          cd code/friendlywrt		
+          cd frt/friendlywrt		
           ./scripts/feeds update -a		
           ./scripts/feeds install -a
       - name: Install Mods
         run: |
-          cd code/friendlywrt
+          cd frt/friendlywrt
           rm -rf feeds/packages/libs/libcap
           svn co https://github.com/openwrt/packages/trunk/libs/libcap feeds/packages/libs/libcap
           
@@ -139,23 +139,23 @@ jobs:
           sed -i 's/\/root/\/mnt\/mmcblk0p2/g' package/luci-app-r2sflasher/root/usr/bin/rom_flash
       - name: Patch Kernel
         run: |
-          cd code/kernel/
+          cd frt/kernel/
           #git apply ../../patches/001-add-full_cone_nat.patch
       - name: Custom Configure Files
         run: |
-          rm -f code/friendlywrt/.config*
-          cp r2s-rk3328-config code/configs/config_rk3328
+          rm -f frt/friendlywrt/.config*
+          cp r2s-rk3328-config frt/configs/config_rk3328
       - name: Set Default Values
         run: |
-          cd code/friendlywrt
+          cd frt/friendlywrt
           sed -i '/uci commit luci/i\uci set luci.main.mediaurlbase=/luci-static/argon' package/lean/default-settings/files/zzz-default-settings
            
       - name: Install UPX
         run: |
-          ln -s /usr/bin/upx-ucl code/friendlywrt/staging_dir/host/bin/upx
+          ln -s /usr/bin/upx-ucl frt/friendlywrt/staging_dir/host/bin/upx
       - name: Build OpenWrt
         run: |
-          cd code/friendlywrt
+          cd frt/friendlywrt
           make j=1 V=s
           #sed -i 's/set -eu/set -u/' scripts/mk-friendlywrt.sh
           #./build.sh nanopi_r2s.mk
@@ -164,7 +164,7 @@ jobs:
           sudo df -lh
           lodev=$(sudo losetup -f)
           echo "found unused loop dev $lodev"
-          sudo losetup -o 100663296 $lodev code/out/*.img
+          sudo losetup -o 100663296 $lodev frt/out/*.img
           sudo rm -rf /mnt/friendlywrt-tmp
           sudo mkdir -p /mnt/friendlywrt-tmp
           sudo mount $lodev /mnt/friendlywrt-tmp
@@ -175,11 +175,11 @@ jobs:
         run: |
           rm -rf ./artifact/
           mkdir -p ./artifact/
-          #find code/out/ -name "FriendlyWrt_*img" | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}.zip" $1' sh {} \;
-          cp code/out/*.img.zip ./artifact/
-          #find code/friendlywrt/bin/targets/rockchip-rk3328/generic -name "openwrt*-squashfs.img" | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}.zip" $1' sh {} \;
+          #find frt/out/ -name "FriendlyWrt_*img" | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}.zip" $1' sh {} \;
+          cp frt/out/*.img.zip ./artifact/
+          #find frt/friendlywrt/bin/targets/rockchip-rk3328/generic -name "openwrt*-squashfs.img" | xargs -I{} sh -c 'f=$(basename $1); zip -r -j "./artifact/${f}.zip" $1' sh {} \;
           
-          cp code/friendlywrt/.config ./artifact/
+          cp frt/friendlywrt/.config ./artifact/
       - name: Upload Artifact
         uses: actions/upload-artifact@master
         with:
